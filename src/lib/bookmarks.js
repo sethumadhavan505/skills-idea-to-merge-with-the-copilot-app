@@ -6,15 +6,35 @@ export function normalizeUrl(value) {
   if (typeof value !== 'string' || value.trim() === '') return null;
 
   const trimmed = value.trim();
-  const candidate = trimmed.startsWith('//')
-    ? `https:${trimmed}`
-    : /^[a-z][a-z\d+.-]*:/i.test(trimmed)
-      ? trimmed
-      : `https://${trimmed}`;
+  let candidate = trimmed;
+
+  if (trimmed.startsWith('//')) {
+    candidate = `https:${trimmed}`;
+  } else if (!trimmed.includes('://')) {
+    const schemeMatch = trimmed.match(/^([a-z][a-z\d+.-]*):/i);
+    if (schemeMatch) {
+      const scheme = schemeMatch[1].toLowerCase();
+      if (scheme === 'http' || scheme === 'https') {
+        candidate = trimmed;
+      } else if (/^[^/]+:\d+$/.test(trimmed)) {
+        candidate = `https://${trimmed}`;
+      } else {
+        return null;
+      }
+    } else {
+      candidate = `https://${trimmed}`;
+    }
+  }
 
   try {
     const url = new URL(candidate);
-    if (!['http:', 'https:'].includes(url.protocol) || !url.hostname) return null;
+    const hostname = url.hostname.toLowerCase();
+    const isValidHost = hostname === 'localhost'
+      || hostname.includes('.')
+      || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)
+      || hostname.includes(':');
+
+    if (!['http:', 'https:'].includes(url.protocol) || !hostname || !isValidHost) return null;
     return url.toString();
   } catch {
     return null;
