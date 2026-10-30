@@ -16,7 +16,7 @@ export function normalizeUrl(value) {
       const scheme = schemeMatch[1].toLowerCase();
       if (scheme === 'http' || scheme === 'https') {
         candidate = trimmed;
-      } else if (/^[^/]+:\d+$/.test(trimmed)) {
+      } else if (/^[^/?#]+:\d+(?:[/?#]|$)/.test(trimmed)) {
         candidate = `https://${trimmed}`;
       } else {
         return null;

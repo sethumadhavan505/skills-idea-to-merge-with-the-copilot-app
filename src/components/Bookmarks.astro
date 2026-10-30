@@ -149,19 +149,26 @@
 
 <style>
   .bookmark-manager {
-    padding: 1.25rem;
+    padding: clamp(1rem, 4vw, 1.5rem);
     border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
     border-radius: 1rem;
-    background: color-mix(in srgb, Canvas 94%, currentColor 6%);
+    background: color-mix(in srgb, Canvas 96%, var(--accent) 4%);
     box-shadow: 0 1rem 2.5rem color-mix(in srgb, currentColor 8%, transparent);
   }
 
   form { margin-top: 0; }
-  input { min-height: 2.8rem; }
+  .field { gap: 0.45rem; }
+  input { min-height: 3rem; }
   button { transition: filter 120ms ease, transform 120ms ease; }
   button:active { transform: translateY(1px); }
 
-  .hint { margin-bottom: 0.75rem; }
+  .hint {
+    margin: 0.75rem 0 1rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .hint code { color: inherit; }
   .status {
     min-height: 1.25rem;
     margin: 0 0 0.75rem;
@@ -171,7 +178,11 @@
 
   .empty {
     padding: 1.75rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
     background: color-mix(in srgb, Canvas 75%, transparent);
+    color: var(--muted);
+    text-align: center;
   }
 
   .list-header {
@@ -203,9 +214,11 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: color-mix(in srgb, Canvas 88%, currentColor 4%);
+    transition: border-color 120ms ease, background-color 120ms ease;
   }
-  .url { flex: 1 1 12rem; overflow-wrap: anywhere; }
-  .slug {
+  .bookmark:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+  .bookmark .url { flex: 1 1 12rem; overflow-wrap: anywhere; }
+  .bookmark .slug {
     font-family: var(--font-body);
     font-size: 0.85rem;
     padding: 0.15rem 0.5rem;
@@ -215,7 +228,6 @@
   .copy { margin-left: 0.35rem; }
 
   @media (max-width: 32rem) {
-    .bookmark-manager { padding: 1rem; }
     .bookmark { gap: 0.5rem 0.25rem; }
   }
 </style>
